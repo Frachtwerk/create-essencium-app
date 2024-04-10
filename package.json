@@ -1,6 +1,6 @@
 {
   "name": "create-essencium-app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This is a setup script for the Essencium frontend to get started with a fresh project.",
   "keywords": [
     "boilerplate",
@@ -12,6 +12,7 @@
   ],
   "license": "MIT",
   "author": "Frachtwerk GmbH",
+  "type": "module",
   "bin": {
     "create-essencium-app": "./setup.js"
   }
