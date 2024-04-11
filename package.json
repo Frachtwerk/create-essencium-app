@@ -1,6 +1,6 @@
 {
   "name": "create-essencium-app",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "This is a setup script for the Essencium frontend to get started with a fresh project.",
   "keywords": [
     "boilerplate",
