@@ -27,42 +27,46 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const repoUrl = 'git@github.com:Frachtwerk/essencium-frontend.git'
+const NEW_APP_LOCATION = process.argv?.[2]
 
-const tempDirForClonedRepo = 'temp_cloned_repo'
-const newAppFolder = 'new-essencium-app'
+if (!NEW_APP_LOCATION) {
+  throw new Error('Please provide a location!')
+}
 
-execSync(`git clone ${repoUrl} ./${tempDirForClonedRepo}`, { stdio: 'inherit' })
+const REPO_URL = 'git@github.com:Frachtwerk/essencium-frontend.git'
+const TEMP_DIR_CLONED_REPO_NAME = 'temp_cloned_repo'
+
+execSync(`git clone ${REPO_URL} ${TEMP_DIR_CLONED_REPO_NAME}`, { stdio: 'inherit' })
 
 const appPackageJsonPath = path.join(
   __dirname,
-  `./${tempDirForClonedRepo}/packages/app/package.json`,
+  `./${TEMP_DIR_CLONED_REPO_NAME}/packages/app/package.json`,
 )
 
 const libPackageJsonPath = path.join(
   __dirname,
-  tempDirForClonedRepo,
+  TEMP_DIR_CLONED_REPO_NAME,
   'packages',
   'lib',
   'package.json',
 )
 const typesPackageJsonPath = path.join(
   __dirname,
-  tempDirForClonedRepo,
+  TEMP_DIR_CLONED_REPO_NAME,
   'packages',
   'types',
   'package.json',
 )
 const eslintConfigPackageJsonPath = path.join(
   __dirname,
-  tempDirForClonedRepo,
+  TEMP_DIR_CLONED_REPO_NAME,
   'packages',
   'eslint-config',
   'package.json',
 )
 const prettierConfigPackageJsonPath = path.join(
   __dirname,
-  tempDirForClonedRepo,
+  TEMP_DIR_CLONED_REPO_NAME,
   'packages',
   'prettier-config',
   'package.json',
@@ -111,43 +115,43 @@ function replaceWorkspaceWithVersion() {
 
 function moveAppFolderIntoNewDir() {
   fs.renameSync(
-    path.join(__dirname, tempDirForClonedRepo, 'packages', 'app'),
-    path.join(__dirname, newAppFolder),
+    path.join(__dirname, TEMP_DIR_CLONED_REPO_NAME, 'packages', 'app'),
+    path.join(__dirname, NEW_APP_LOCATION),
   )
 }
 
 function removeTsConfigsInNewAppDir() {
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'tsconfig.json'))
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'tsconfig.build.json'))
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'tsconfig.base.json'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'tsconfig.json'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'tsconfig.build.json'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'tsconfig.base.json'))
 }
 
 function removeVitestConfigInNewAppDir() {
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'vitest.config.ts'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'vitest.config.ts'))
 }
 
 function copyAppTsConfigFileIntoNewAppDir() {
   fs.copyFileSync(
-    path.join(__dirname, newAppFolder, 'misc', 'tsconfig.app.json'),
-    path.join(__dirname, newAppFolder, 'tsconfig.json'),
+    path.join(__dirname, NEW_APP_LOCATION, 'misc', 'tsconfig.app.json'),
+    path.join(__dirname, NEW_APP_LOCATION, 'tsconfig.json'),
   )
 }
 
 function copyAppVitestConfigFileIntoNewAppDir() {
   fs.copyFileSync(
-    path.join(__dirname, newAppFolder, 'misc', 'vitest.config.app.ts'),
-    path.join(__dirname, newAppFolder, 'vitest.config.ts'),
+    path.join(__dirname, NEW_APP_LOCATION, 'misc', 'vitest.config.app.ts'),
+    path.join(__dirname, NEW_APP_LOCATION, 'vitest.config.ts'),
   )
 }
 
 function removeMiscFolderInNewAppDir() {
-  fs.rmdirSync(path.join(__dirname, newAppFolder, 'misc'), {
+  fs.rmdirSync(path.join(__dirname, NEW_APP_LOCATION, 'misc'), {
     recursive: true,
   })
 }
 
 function removeClonedFolder() {
-  fs.rmdirSync(path.join(__dirname, tempDirForClonedRepo), {
+  fs.rmdirSync(path.join(__dirname, TEMP_DIR_CLONED_REPO_NAME), {
     recursive: true,
   })
 }
@@ -155,14 +159,14 @@ function removeClonedFolder() {
 function configureNewApp() {
   const newAppPackageJsonPath = path.join(
     __dirname,
-    `./${newAppFolder}/package.json`,
+    `./${NEW_APP_LOCATION}/package.json`,
   )
 
   const newAppPackageJson = JSON.parse(
     fs.readFileSync(newAppPackageJsonPath, 'utf-8'),
   )
 
-  newAppPackageJson.name = newAppFolder
+  newAppPackageJson.name = NEW_APP_LOCATION
   newAppPackageJson.version = '1.0.0'
   newAppPackageJson.description = 'A new Essencium-based app.'
   delete newAppPackageJson.nx
@@ -174,8 +178,8 @@ function configureNewApp() {
 }
 
 function cleanUpSomeFilesInNewApp() {
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'CHANGELOG.md'))
-  fs.unlinkSync(path.join(__dirname, newAppFolder, 'README.md'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'CHANGELOG.md'))
+  fs.unlinkSync(path.join(__dirname, NEW_APP_LOCATION, 'README.md'))
 }
 
 replaceWorkspaceWithVersion()
