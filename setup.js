@@ -33,10 +33,12 @@ if (!NEW_APP_LOCATION) {
   throw new Error('Please provide a location!')
 }
 
-const REPO_URL = 'git@github.com:Frachtwerk/essencium-frontend.git'
+const REPO_URL = 'https://github.com/Frachtwerk/essencium-frontend.git'
 const TEMP_DIR_CLONED_REPO_NAME = 'temp_cloned_repo'
 
-execSync(`git clone ${REPO_URL} ${TEMP_DIR_CLONED_REPO_NAME}`, { stdio: 'inherit' })
+execSync(`git clone ${REPO_URL} ${TEMP_DIR_CLONED_REPO_NAME}`, {
+  stdio: 'inherit',
+})
 
 const appPackageJsonPath = path.join(
   __dirname,
